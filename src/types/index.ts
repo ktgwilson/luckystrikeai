@@ -199,3 +199,11 @@ export interface UserSession {
   theme: string;
   scratchCount: number;
 }
+
+export interface UserSettings {
+  aiPersonalizationEnabled: boolean;
+  notificationsEnabled: boolean;
+  dataCollectionOptOut: boolean;
+  analyticsOptOut: boolean;
+  marketingOptOut: boolean;
+}

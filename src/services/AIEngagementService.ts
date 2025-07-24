@@ -218,7 +218,7 @@ export class AIEngagementService {
 
   private static calculateEngagementScore(sessions: any[], wallet: Wallet): number {
     const sessionScore = Math.min(sessions.length / 50, 1.0) * 0.3;
-    const walletScore = Math.min(wallet.totalTokens / 1000, 1.0) * 0.3;
+    const walletScore = Math.min((wallet.totalTokens || 0) / 1000, 1.0) * 0.3;
     const activityScore = this.calculateRecentActivityScore(sessions) * 0.4;
     
     return sessionScore + walletScore + activityScore;

@@ -298,4 +298,33 @@ export class StorageService {
       return null;
     }
   }
+
+  static async getUserSettings(userId: string): Promise<any> {
+    try {
+      const data = await AsyncStorage.getItem(`user_settings_${userId}`);
+      return data ? JSON.parse(data) : null;
+    } catch (error) {
+      console.error('Error getting user settings:', error);
+      return null;
+    }
+  }
+
+  static async saveUserSettings(userId: string, settings: any): Promise<void> {
+    try {
+      await AsyncStorage.setItem(`user_settings_${userId}`, JSON.stringify(settings));
+    } catch (error) {
+      console.error('Error saving user settings:', error);
+    }
+  }
+
+  static async deleteAllUserData(userId: string): Promise<void> {
+    try {
+      const keys = await AsyncStorage.getAllKeys();
+      const userKeys = keys.filter(key => key.includes(userId));
+      await AsyncStorage.multiRemove(userKeys);
+    } catch (error) {
+      console.error('Error deleting user data:', error);
+      throw error;
+    }
+  }
 }
