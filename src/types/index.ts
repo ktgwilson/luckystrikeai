@@ -207,3 +207,213 @@ export interface UserSettings {
   analyticsOptOut: boolean;
   marketingOptOut: boolean;
 }
+
+export interface ScratchParty {
+  id: string;
+  name: string;
+  hostId: string;
+  participants: PartyParticipant[];
+  maxParticipants: number;
+  startTime: Date;
+  endTime: Date;
+  prizePool: number;
+  status: 'waiting' | 'active' | 'completed';
+  theme: string;
+  entryFee: number;
+}
+
+export interface PartyParticipant {
+  userId: string;
+  username: string;
+  avatar?: string;
+  joinedAt: Date;
+  score: number;
+  wins: number;
+  isReady: boolean;
+}
+
+export interface Club {
+  id: string;
+  name: string;
+  description: string;
+  ownerId: string;
+  members: ClubMember[];
+  maxMembers: number;
+  level: number;
+  totalXP: number;
+  challenges: ClubChallenge[];
+  createdAt: Date;
+  isPublic: boolean;
+  requirements: {
+    minLevel: number;
+    minWins: number;
+  };
+}
+
+export interface ClubMember {
+  userId: string;
+  username: string;
+  role: 'owner' | 'admin' | 'member';
+  joinedAt: Date;
+  contributedXP: number;
+  lastActive: Date;
+}
+
+export interface ClubChallenge {
+  id: string;
+  title: string;
+  description: string;
+  target: number;
+  progress: number;
+  reward: {
+    tokens: number;
+    xp: number;
+    badges: string[];
+  };
+  expiresAt: Date;
+  isCompleted: boolean;
+}
+
+export interface NFTItem {
+  id: string;
+  tokenId: string;
+  contractAddress: string;
+  name: string;
+  description: string;
+  image: string;
+  rarity: 'common' | 'rare' | 'epic' | 'legendary';
+  category: 'skin' | 'theme' | 'avatar' | 'badge';
+  attributes: NFTAttribute[];
+  creator: string;
+  owner: string;
+  price?: number;
+  currency?: 'tokens' | 'eth' | 'usdc';
+  isForSale: boolean;
+  createdAt: Date;
+  lastSalePrice?: number;
+}
+
+export interface NFTAttribute {
+  trait_type: string;
+  value: string | number;
+  display_type?: string;
+}
+
+export interface MarketplaceListing {
+  id: string;
+  nftId: string;
+  sellerId: string;
+  price: number;
+  currency: 'tokens' | 'eth' | 'usdc';
+  listedAt: Date;
+  expiresAt?: Date;
+  status: 'active' | 'sold' | 'cancelled' | 'expired';
+}
+
+export interface PlayerInventory {
+  userId: string;
+  nfts: NFTItem[];
+  equippedItems: {
+    skin?: string;
+    theme?: string;
+    avatar?: string;
+    badges: string[];
+  };
+  totalValue: number;
+  lastUpdated: Date;
+}
+
+export interface BehavioralSegment {
+  id: string;
+  name: string;
+  description: string;
+  criteria: SegmentCriteria;
+  userCount: number;
+  avgLTV: number;
+  churnRate: number;
+  preferredOffers: string[];
+}
+
+export interface SegmentCriteria {
+  minSessions: number;
+  maxSessions?: number;
+  minSpend: number;
+  maxSpend?: number;
+  winRateRange: [number, number];
+  playTimeRange: [number, number];
+  preferredThemes: string[];
+  churnRiskRange: [number, number];
+}
+
+export interface FraudDetectionResult {
+  userId: string;
+  riskScore: number;
+  confidence: number;
+  flags: FraudFlag[];
+  recommendation: 'allow' | 'review' | 'block';
+  timestamp: Date;
+}
+
+export interface FraudFlag {
+  type: 'velocity' | 'pattern' | 'device' | 'location' | 'behavior';
+  severity: 'low' | 'medium' | 'high';
+  description: string;
+  evidence: Record<string, any>;
+}
+
+export interface LocalizedContent {
+  language: string;
+  region: string;
+  translations: Record<string, string>;
+  prizeNames: Record<string, string>;
+  themeNames: Record<string, string>;
+  currencySymbol: string;
+  dateFormat: string;
+}
+
+export interface RegionConfig {
+  code: string;
+  name: string;
+  currency: string;
+  language: string;
+  isGamblingAllowed: boolean;
+  maxPrizeValue: number;
+  requiredAge: number;
+  taxRate: number;
+  supportedPayments: string[];
+}
+
+export interface SocialShare {
+  id: string;
+  userId: string;
+  platform: 'instagram' | 'tiktok' | 'twitter' | 'facebook';
+  content: {
+    text: string;
+    image?: string;
+    video?: string;
+    hashtags: string[];
+  };
+  winAmount?: number;
+  theme: string;
+  sharedAt: Date;
+  engagement: {
+    likes: number;
+    shares: number;
+    comments: number;
+  };
+}
+
+export interface ReferralProgram {
+  id: string;
+  referrerId: string;
+  refereeId: string;
+  code: string;
+  status: 'pending' | 'completed' | 'expired';
+  reward: {
+    referrerTokens: number;
+    refereeTokens: number;
+    bonusTickets: number;
+  };
+  createdAt: Date;
+  completedAt?: Date;
+}
