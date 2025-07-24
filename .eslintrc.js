@@ -1,6 +1,5 @@
 module.exports = {
   extends: [
-    '@react-native-community',
     'plugin:@typescript-eslint/recommended',
   ],
   parser: '@typescript-eslint/parser',
@@ -12,6 +11,7 @@ module.exports = {
     'react-hooks/exhaustive-deps': 'warn',
   },
   env: {
-    'react-native/react-native': true,
+    es6: true,
+    node: true,
   },
 };

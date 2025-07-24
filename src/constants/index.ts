@@ -76,3 +76,66 @@ export const WIN_CONDITIONS = {
   MATCH_THREE: 3,
   INSTANT_WIN_SYMBOLS: ['💎', '⭐']
 };
+
+export const SCRATCH_THEMES = {
+  AURORA_FORTUNE: {
+    name: 'Aurora Fortune',
+    colors: {
+      primary: '#00D4AA',
+      secondary: '#7B68EE',
+      accent: '#FFB6C1',
+      background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)'
+    },
+    symbols: ['❄️', '🌟', '🦌', '🏔️', '💎', '🌙'],
+    winSymbol: '🌌',
+    theme: 'Northern lights, glowing runes, winter animals'
+  },
+  SUNKEN_RICHES: {
+    name: 'Sunken Riches',
+    colors: {
+      primary: '#20B2AA',
+      secondary: '#4682B4',
+      accent: '#FFE4B5',
+      background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)'
+    },
+    symbols: ['🐠', '🦑', '🐚', '⚓', '💰', '🏴‍☠️'],
+    winSymbol: '🏆',
+    theme: 'Underwater treasures, coral, pearls'
+  },
+  PIXEL_PAYOUT: {
+    name: 'Pixel Payout',
+    colors: {
+      primary: '#FF6B6B',
+      secondary: '#4ECDC4',
+      accent: '#45B7D1',
+      background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)'
+    },
+    symbols: ['🎮', '👾', '🕹️', '💾', '🎯', '⚡'],
+    winSymbol: '🏅',
+    theme: 'Retro pixel art, arcade sounds'
+  },
+  MYTHIC_MATCHUP: {
+    name: 'Mythic Matchup',
+    colors: {
+      primary: '#DAA520',
+      secondary: '#8B4513',
+      accent: '#FF4500',
+      background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)'
+    },
+    symbols: ['⚡', '🔱', '🏛️', '🦅', '🌟', '👑'],
+    winSymbol: '🏆',
+    theme: 'Greek gods, magical numbers'
+  },
+  GALACTIC_GOLD: {
+    name: 'Galactic Gold Rush',
+    colors: {
+      primary: '#FFD700',
+      secondary: '#9370DB',
+      accent: '#00CED1',
+      background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)'
+    },
+    symbols: ['🚀', '🪐', '🌟', '👽', '💎', '🛸'],
+    winSymbol: '🌌',
+    theme: 'Planets, rockets, cosmic gems'
+  }
+};

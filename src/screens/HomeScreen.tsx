@@ -3,7 +3,7 @@ import { View, Text, StyleSheet, TouchableOpacity, Alert, ScrollView } from 'rea
 import { LinearGradient } from 'expo-linear-gradient';
 import { Wallet, DailyTicketStatus } from '../types';
 import { WalletManager } from '../utils/WalletManager';
-import { COLORS } from '../constants';
+import { COLORS, SCRATCH_THEMES } from '../constants';
 
 interface HomeScreenProps {
   onScratchPress: () => void;
@@ -15,10 +15,18 @@ interface HomeScreenProps {
 export const HomeScreen: React.FC<HomeScreenProps> = ({ onScratchPress, onAccountPress, wallet, onWalletUpdate }) => {
   const [dailyTicketStatus, setDailyTicketStatus] = useState<DailyTicketStatus | null>(null);
   const [isLoading, setIsLoading] = useState(false);
+  const [featuredTheme, setFeaturedTheme] = useState(SCRATCH_THEMES.AURORA_FORTUNE);
 
   useEffect(() => {
     loadDailyTicketStatus();
+    selectFeaturedTheme();
   }, []);
+
+  const selectFeaturedTheme = () => {
+    const themes = Object.values(SCRATCH_THEMES);
+    const randomTheme = themes[Math.floor(Math.random() * themes.length)];
+    setFeaturedTheme(randomTheme);
+  };
 
   const loadDailyTicketStatus = async () => {
     try {
@@ -121,13 +129,31 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({ onScratchPress, onAccoun
           )}
         </View>
 
+        <View style={styles.featuredGameContainer}>
+          <Text style={styles.featuredGameTitle}>🎯 Featured Game</Text>
+          <View style={styles.themePreview}>
+            <LinearGradient
+              colors={[featuredTheme.colors.primary, featuredTheme.colors.secondary]}
+              style={styles.themeCard}
+            >
+              <Text style={styles.themeName}>{featuredTheme.name}</Text>
+              <Text style={styles.themeDesc}>{featuredTheme.theme}</Text>
+              <View style={styles.themeSymbols}>
+                {featuredTheme.symbols.slice(0, 3).map((symbol: string, index: number) => (
+                  <Text key={index} style={styles.themeSymbol}>{symbol}</Text>
+                ))}
+              </View>
+            </LinearGradient>
+          </View>
+        </View>
+
         <TouchableOpacity
           style={[styles.scratchButton, wallet.tickets === 0 && styles.disabledButton]}
           onPress={onScratchPress}
           disabled={wallet.tickets === 0}
         >
           <LinearGradient
-            colors={[COLORS.primary, COLORS.accent]}
+            colors={[featuredTheme.colors.primary, featuredTheme.colors.accent]}
             style={styles.scratchButtonGradient}
           >
             <Text style={styles.scratchButtonText}>
@@ -319,5 +345,49 @@ const styles = StyleSheet.create({
     fontSize: 20,
     fontWeight: 'bold',
     color: COLORS.accent,
+  },
+  featuredGameContainer: {
+    backgroundColor: COLORS.surface,
+    borderRadius: 15,
+    padding: 20,
+    marginBottom: 20,
+    borderWidth: 1,
+    borderColor: COLORS.primary,
+  },
+  featuredGameTitle: {
+    fontSize: 18,
+    fontWeight: 'bold',
+    color: COLORS.text,
+    textAlign: 'center',
+    marginBottom: 15,
+  },
+  themePreview: {
+    borderRadius: 10,
+    overflow: 'hidden',
+  },
+  themeCard: {
+    padding: 15,
+    alignItems: 'center',
+  },
+  themeName: {
+    fontSize: 16,
+    fontWeight: 'bold',
+    color: COLORS.text,
+    marginBottom: 5,
+  },
+  themeDesc: {
+    fontSize: 12,
+    color: COLORS.textSecondary,
+    textAlign: 'center',
+    marginBottom: 10,
+    fontStyle: 'italic',
+  },
+  themeSymbols: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+  },
+  themeSymbol: {
+    fontSize: 20,
+    marginHorizontal: 5,
   },
 });
