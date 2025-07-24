@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, ScrollView } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
-import { AIPersonalizationData, ChurnPrediction } from '../types';
+import { AIPersonalizationData } from '../types';
 import { COLORS } from '../constants';
 import { AIEngagementService } from '../services/AIEngagementService';
 
