@@ -17,6 +17,7 @@ export interface Wallet {
   tickets: number;
   totalWinnings: number;
   totalSpent: number;
+  totalTokens?: number;
 }
 
 export interface Ticket {
@@ -140,4 +141,61 @@ export interface UserPaymentHistory {
   description: string;
   timestamp: Date;
   status: 'pending' | 'completed' | 'failed' | 'cancelled';
+}
+
+export interface ComplianceData {
+  ageVerified: boolean;
+  termsAccepted: boolean;
+  privacyAccepted: boolean;
+  jurisdiction: string;
+  verificationDate: Date;
+}
+
+export interface AIPersonalizationData {
+  userId: string;
+  sessionCount: number;
+  avgSessionDuration: number;
+  winRate: number;
+  spendingPattern: {
+    avgSpend: number;
+    trend: number;
+  };
+  preferredPlayTimes: number[];
+  churnRisk: ChurnPrediction;
+  lastActivity: Date;
+  engagementScore: number;
+  preferredThemes: string[];
+}
+
+export interface ChurnPrediction {
+  riskScore: number;
+  confidence: number;
+  factors: string[];
+  recommendation: string;
+}
+
+export interface SmartReward {
+  id: string;
+  type: 'comeback_bonus' | 'lucky_hour' | 'loyalty_reward' | 'streak_bonus';
+  title: string;
+  description: string;
+  reward: {
+    tokens: number;
+    freeTickets: number;
+    multiplier: number;
+  };
+  expiresAt: Date;
+  personalizedMessage: string;
+  triggerCondition: string;
+}
+
+export interface UserSession {
+  id: string;
+  userId: string;
+  timestamp: number;
+  duration: number;
+  won: boolean;
+  tokensSpent: number;
+  theme: string;
+  scratchCount: number;
 }

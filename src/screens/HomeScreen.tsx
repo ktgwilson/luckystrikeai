@@ -1,9 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, Alert, ScrollView } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
-import { Wallet, DailyTicketStatus } from '../types';
+import { Wallet, DailyTicketStatus, SmartReward } from '../types';
 import { WalletManager } from '../utils/WalletManager';
 import { COLORS, SCRATCH_THEMES } from '../constants';
+import { AIEngagementService } from '../services/AIEngagementService';
+import { StorageService } from '../services/StorageService';
+import { SmartRewardModal } from '../components/SmartRewardModal';
+import { AIInsightsPanel } from '../components/AIInsightsPanel';
 
 interface HomeScreenProps {
   onScratchPress: () => void;
@@ -16,11 +20,28 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({ onScratchPress, onAccoun
   const [dailyTicketStatus, setDailyTicketStatus] = useState<DailyTicketStatus | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [featuredTheme, setFeaturedTheme] = useState(SCRATCH_THEMES.AURORA_FORTUNE);
+  const [smartReward, setSmartReward] = useState<SmartReward | null>(null);
+  const [showRewardModal, setShowRewardModal] = useState(false);
+  const [showAIInsights, setShowAIInsights] = useState(false);
+  const [userId] = useState(() => `user_${Date.now()}`);
 
   useEffect(() => {
     loadDailyTicketStatus();
     selectFeaturedTheme();
+    checkForSmartRewards();
   }, []);
+
+  const checkForSmartRewards = async () => {
+    try {
+      const reward = await AIEngagementService.generateSmartReward(userId);
+      if (reward) {
+        setSmartReward(reward);
+        setShowRewardModal(true);
+      }
+    } catch (error) {
+      console.error('Error checking for smart rewards:', error);
+    }
+  };
 
   const selectFeaturedTheme = () => {
     const themes = Object.values(SCRATCH_THEMES);
@@ -46,11 +67,39 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({ onScratchPress, onAccoun
       onWalletUpdate(newWallet);
       setDailyTicketStatus(status);
       Alert.alert('Success!', 'You claimed your daily free ticket!');
+
+      await StorageService.updateLastActivity(userId);
+      await StorageService.saveUserSession(userId, {
+        id: `session_${Date.now()}`,
+        userId,
+        timestamp: Date.now(),
+        duration: 0,
+        won: false,
+        tokensSpent: 0,
+        theme: 'daily_claim',
+        scratchCount: 0
+      });
     } catch (error) {
       console.error('Error claiming daily ticket:', error);
       Alert.alert('Error', 'Failed to claim daily ticket. Please try again.');
     } finally {
       setIsLoading(false);
+    }
+  };
+
+  const handleClaimSmartReward = async (reward: SmartReward) => {
+    try {
+      await AIEngagementService.trackAIEvent('reward_claimed', userId, {
+        rewardId: reward.id,
+        rewardType: reward.type,
+        tokensAwarded: reward.reward.tokens,
+        ticketsAwarded: reward.reward.freeTickets
+      });
+      
+      const updatedWallet = await WalletManager.getWallet();
+      onWalletUpdate(updatedWallet);
+    } catch (error) {
+      console.error('Error handling smart reward claim:', error);
     }
   };
 
@@ -77,9 +126,14 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({ onScratchPress, onAccoun
         <View style={styles.header}>
           <Text style={styles.title}>🎰 LuckyStrike</Text>
           <Text style={styles.subtitle}>AI-Powered Scratch-Off</Text>
-          <TouchableOpacity style={styles.accountButton} onPress={onAccountPress}>
-            <Text style={styles.accountButtonText}>👤 Account</Text>
-          </TouchableOpacity>
+          <View style={styles.headerButtons}>
+            <TouchableOpacity style={styles.aiButton} onPress={() => setShowAIInsights(true)}>
+              <Text style={styles.aiButtonText}>🤖 AI</Text>
+            </TouchableOpacity>
+            <TouchableOpacity style={styles.accountButton} onPress={onAccountPress}>
+              <Text style={styles.accountButtonText}>👤 Account</Text>
+            </TouchableOpacity>
+          </View>
         </View>
 
         <View style={styles.walletContainer}>
@@ -178,6 +232,20 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({ onScratchPress, onAccoun
           </View>
         </View>
       </ScrollView>
+
+      <SmartRewardModal
+        reward={smartReward}
+        visible={showRewardModal}
+        onClose={() => setShowRewardModal(false)}
+        onClaim={handleClaimSmartReward}
+        userId={userId}
+      />
+
+      <AIInsightsPanel
+        userId={userId}
+        visible={showAIInsights}
+        onClose={() => setShowAIInsights(false)}
+      />
     </LinearGradient>
   );
 };
@@ -195,10 +263,27 @@ const styles = StyleSheet.create({
     marginBottom: 30,
     position: 'relative',
   },
-  accountButton: {
+  headerButtons: {
     position: 'absolute',
     top: 0,
     right: 0,
+    flexDirection: 'row',
+    gap: 10,
+  },
+  aiButton: {
+    backgroundColor: COLORS.secondary,
+    paddingHorizontal: 12,
+    paddingVertical: 8,
+    borderRadius: 20,
+    borderWidth: 1,
+    borderColor: COLORS.secondary,
+  },
+  aiButtonText: {
+    color: COLORS.text,
+    fontSize: 12,
+    fontWeight: '600',
+  },
+  accountButton: {
     backgroundColor: COLORS.surface,
     paddingHorizontal: 15,
     paddingVertical: 8,

@@ -220,4 +220,82 @@ export class StorageService {
       console.error('Error clearing all data:', error);
     }
   }
+
+  static async getUserSessions(userId: string): Promise<any[]> {
+    try {
+      const sessions = await AsyncStorage.getItem(`user_sessions_${userId}`);
+      return sessions ? JSON.parse(sessions) : [];
+    } catch (error) {
+      console.error('Error getting user sessions:', error);
+      return [];
+    }
+  }
+
+  static async saveUserSession(userId: string, session: any): Promise<void> {
+    try {
+      const sessions = await this.getUserSessions(userId);
+      sessions.push(session);
+      await AsyncStorage.setItem(`user_sessions_${userId}`, JSON.stringify(sessions));
+    } catch (error) {
+      console.error('Error saving user session:', error);
+      throw error;
+    }
+  }
+
+  static async getLastActivity(userId: string): Promise<Date | null> {
+    try {
+      const lastActivity = await AsyncStorage.getItem(`last_activity_${userId}`);
+      return lastActivity ? new Date(lastActivity) : null;
+    } catch (error) {
+      console.error('Error getting last activity:', error);
+      return null;
+    }
+  }
+
+  static async updateLastActivity(userId: string): Promise<void> {
+    try {
+      await AsyncStorage.setItem(`last_activity_${userId}`, new Date().toISOString());
+    } catch (error) {
+      console.error('Error updating last activity:', error);
+      throw error;
+    }
+  }
+
+  static async saveAIPersonalizationData(userId: string, data: any): Promise<void> {
+    try {
+      await AsyncStorage.setItem(`ai_personalization_${userId}`, JSON.stringify(data));
+    } catch (error) {
+      console.error('Error saving AI personalization data:', error);
+      throw error;
+    }
+  }
+
+  static async getAIPersonalizationData(userId: string): Promise<any | null> {
+    try {
+      const data = await AsyncStorage.getItem(`ai_personalization_${userId}`);
+      return data ? JSON.parse(data) : null;
+    } catch (error) {
+      console.error('Error getting AI personalization data:', error);
+      return null;
+    }
+  }
+
+  static async saveComplianceData(data: any): Promise<void> {
+    try {
+      await AsyncStorage.setItem('compliance_data', JSON.stringify(data));
+    } catch (error) {
+      console.error('Error saving compliance data:', error);
+      throw error;
+    }
+  }
+
+  static async getComplianceData(): Promise<any | null> {
+    try {
+      const data = await AsyncStorage.getItem('compliance_data');
+      return data ? JSON.parse(data) : null;
+    } catch (error) {
+      console.error('Error getting compliance data:', error);
+      return null;
+    }
+  }
 }
