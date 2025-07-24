@@ -10,8 +10,8 @@ interface ScratchScreenProps {
   onWalletUpdate: (wallet: Wallet) => void;
 }
 
-export const ScratchScreen: React.FC<ScratchScreenProps> = ({ onBackPress, onWalletUpdate }) => {
-  const [scratchResult, setScratchResult] = useState<ScratchResult | null>(null);
+export const ScratchScreen: React.FC<ScratchScreenProps> = ({ onBackPress }) => {
+  const [, ] = useState<ScratchResult | null>(null);
   const [isComplete, setIsComplete] = useState(false);
 
   const handleScratchComplete = (result: ScratchResult) => {

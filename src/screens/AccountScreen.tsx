@@ -24,7 +24,7 @@ interface AccountScreenProps {
 export const AccountScreen: React.FC<AccountScreenProps> = ({ userId, onBack }) => {
   const [wallet, setWallet] = useState<Wallet | null>(null);
   const [transactions, setTransactions] = useState<PaymentTransaction[]>([]);
-  const [paymentHistory, setPaymentHistory] = useState<UserPaymentHistory[]>([]);
+  const [, ] = useState<UserPaymentHistory[]>([]);
   const [paymentMethods, setPaymentMethods] = useState<PaymentMethod[]>([]);
   const [showPaymentModal, setShowPaymentModal] = useState(false);
   const [showWithdrawModal, setShowWithdrawModal] = useState(false);

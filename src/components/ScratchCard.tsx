@@ -1,16 +1,15 @@
-import React, { useState, useRef } from 'react';
+import React, { useState } from 'react';
 import { View, StyleSheet, Dimensions, Text, Alert, Platform } from 'react-native';
 import { PanGestureHandler, State } from 'react-native-gesture-handler';
-import Svg, { Rect, Circle, Defs, LinearGradient, Stop, Text as SvgText } from 'react-native-svg';
+import Svg, { Rect, Defs, LinearGradient, Stop, Text as SvgText } from 'react-native-svg';
 import { RNGService } from '../services/RNGService';
 import { WalletManager } from '../utils/WalletManager';
 import { AnalyticsService } from '../services/AnalyticsService';
 import { Prize, ScratchResult, TicketType } from '../types';
 import { COLORS } from '../constants';
 
-const { width: screenWidth, height: screenHeight } = Dimensions.get('window');
+const { width: screenWidth } = Dimensions.get('window');
 const isTablet = screenWidth >= 768;
-const isPhone = screenWidth < 768;
 const CARD_WIDTH = isTablet ? Math.min(screenWidth * 0.5, 350) : Math.min(screenWidth * 0.85, 280);
 const CARD_HEIGHT = CARD_WIDTH * 0.65;
 
