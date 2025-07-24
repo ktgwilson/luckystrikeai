@@ -11,7 +11,7 @@ interface ScratchScreenProps {
 }
 
 export const ScratchScreen: React.FC<ScratchScreenProps> = ({ onBackPress }) => {
-  const [, ] = useState<ScratchResult | null>(null);
+  const [scratchResult, setScratchResult] = useState<ScratchResult | null>(null);
   const [isComplete, setIsComplete] = useState(false);
 
   const handleScratchComplete = (result: ScratchResult) => {
