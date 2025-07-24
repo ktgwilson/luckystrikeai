@@ -1,7 +1,7 @@
 import { AnalyticsService } from './AnalyticsService';
 import { StorageService } from './StorageService';
 import { WalletManager } from '../utils/WalletManager';
-import { User, Wallet, AIPersonalizationData, ChurnPrediction, SmartReward } from '../types';
+import { Wallet, AIPersonalizationData, ChurnPrediction, SmartReward } from '../types';
 
 export class AIEngagementService {
   private static readonly CHURN_THRESHOLD = 0.7;
@@ -103,14 +103,13 @@ export class AIEngagementService {
   static async generateSmartReward(userId: string): Promise<SmartReward | null> {
     try {
       const behaviorData = await this.analyzeUserBehavior(userId);
-      const wallet = await WalletManager.getWallet();
       
       if (behaviorData.churnRisk.riskScore > this.CHURN_THRESHOLD) {
-        return this.generateComebackBonus(behaviorData, wallet);
+        return this.generateComebackBonus(behaviorData);
       }
 
       if (this.isInLuckyHour()) {
-        return this.generateLuckyHourBonus(behaviorData);
+        return this.generateLuckyHourBonus();
       }
 
       if (behaviorData.engagementScore > 0.8) {
@@ -124,7 +123,7 @@ export class AIEngagementService {
     }
   }
 
-  private static generateComebackBonus(behaviorData: AIPersonalizationData, wallet: Wallet): SmartReward {
+  private static generateComebackBonus(behaviorData: AIPersonalizationData): SmartReward {
     const bonusTokens = Math.floor(behaviorData.spendingPattern.avgSpend * 0.5);
     
     return {
@@ -143,7 +142,7 @@ export class AIEngagementService {
     };
   }
 
-  private static generateLuckyHourBonus(behaviorData: AIPersonalizationData): SmartReward {
+  private static generateLuckyHourBonus(): SmartReward {
     return {
       id: `lucky_hour_${Date.now()}`,
       type: 'lucky_hour',

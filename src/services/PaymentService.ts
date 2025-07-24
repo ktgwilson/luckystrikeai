@@ -1,4 +1,4 @@
-import { PaymentMethod, PaymentTransaction, PaymentResult, AdminProfitData, UserPaymentHistory } from '../types';
+import { PaymentMethod, PaymentTransaction, PaymentResult, AdminProfitData } from '../types';
 import { AnalyticsService } from './AnalyticsService';
 import { StorageService } from './StorageService';
 
@@ -344,7 +344,7 @@ export class PaymentService {
     }
   }
 
-  static async getCryptoExchangeRate(fromCurrency: string, toCurrency: string = 'USD'): Promise<number> {
+  static async getCryptoExchangeRate(fromCurrency: string): Promise<number> {
     const mockRates: { [key: string]: number } = {
       'bitcoin': 45000,
       'ethereum': 2800,
